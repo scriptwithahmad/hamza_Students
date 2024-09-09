@@ -14,8 +14,11 @@ const blogsSchema = new mongoose.Schema(
       type: String,
       required: [true, "Category Required"],
     },
+    image: {
+      type: String,
+    },
     user: {
-      type: Mongoose.Schema.ObjectID,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "users",
     },
   },
