@@ -40,13 +40,12 @@ const navLinks = [
 const Aside = () => {
   const router = usePathname();
 
-
   return (
     <aside
-      className={`pt-10 overflow-hidden pb-6 border-r flex items-center flex-col justify-between `}
+      className={`pt-10 overflow-hidden pb-6 border-r flex items-center flex-col justify-between p-4`}
     >
       <div className="flex flex-col items-center px-5">
-        <div className="w-[70px] h-[70px] rounded-full relative before:absolute before:-bottom-1 before:animate-pulse before:left-1/2 before:-translate-x-1/2 before:h-3 before:w-3 before:bg-green-600 before:rounded-full">
+        <div className="w-[200px] rounded-full relative before:absolute before:-bottom-1 before:animate-pulse before:left-1/2 before:-translate-x-1/2 before:h-3 before:w-3 before:bg-green-600 before:rounded-full">
           <img
             alt="user profile"
             src={"/images/user.png"}

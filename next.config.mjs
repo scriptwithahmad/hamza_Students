@@ -1,7 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     env: {
-        DB_URI: "mongodb+srv://ahmed:ahmed@edify.9anuaq1.mongodb.net/hamza_Stu_project?retryWrites=true&w=majority&appName=edify"
+        DB_URI: "mongodb+srv://ahmed:ahmed@edify.9anuaq1.mongodb.net/hamza_Stu_project?retryWrites=true&w=majority&appName=edify",
+
+
+        // Cloudinary ------------------------------
+        NEXT_PUBLIC_SECRET_KEY: "1234555aaddad",
+        NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: "dmyrswz0r",
+        NEXT_PUBLIC_CLOUDINARY_API_KEY: "885761744226268",
+        NEXT_PUBLIC_CLOUDINARY_API_SECRET: "0JlDP2yzQVQ-L3NwZDDmfzhk1Qs",
     }
 };
 

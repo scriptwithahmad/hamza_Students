@@ -2,9 +2,13 @@
 import React, { useState } from 'react'
 import { Editor } from '@tinymce/tinymce-react';
 import axios from 'axios';
+import { CldUploadWidget } from "next-cloudinary";
+import { Delete01Icon, PlusSignIcon } from 'hugeicons-react';
 
 const Page = () => {
 
+    const [selectedImage, setSelectedImage] = useState(null)
+    console.log(selectedImage)
 
     const [formData, setFormData] = useState({
         desc: "",
@@ -12,7 +16,7 @@ const Page = () => {
         category: "",
     })
 
-    console.log(formData)
+    // console.log(formData)
 
 
     // onchange handler -------
@@ -24,16 +28,20 @@ const Page = () => {
 
     }
 
-
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-            const res = await axios.post("/api/blogs", formData)
+            const res = await axios.post("/api/blogs", { ...formData, image: selectedImage })
 
             console.log(res.data)
 
             if (res.data.success) {
                 alert(res.data.message)
+                setFormData({
+                    desc: "",
+                    title: "",
+                    category: "",
+                })
             }
 
         } catch (error) {
@@ -98,6 +106,44 @@ const Page = () => {
                                                 "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
                                         }}
                                     />
+                                </div>
+
+
+                                {/* Image show for local */}
+                                <div className="flex items-center gap-3 border border-gray-700 rounded-lg p-4">
+
+                                    {selectedImage &&
+                                        <div className='relative'>
+                                            <img className='size-24 rounded-lg' src={selectedImage} alt="image here" />
+                                            <Delete01Icon onClick={() => setSelectedImage(null)} className='bg-red-800 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50' />
+                                        </div>
+                                    }
+
+
+                                    {/* Image uplaod function here */}
+                                    <CldUploadWidget
+                                        uploadPreset="blog-image"
+                                        onSuccess={(results) => {
+                                            if (
+                                                results.info?.secure_url &&
+                                                results.event === "success"
+                                            ) {
+                                                setSelectedImage(results.info.secure_url);
+                                            }
+                                        }}
+                                    >
+                                        {({ open }) => (
+                                            <button
+                                                type="button"
+                                                onClick={open}
+                                                className="flex items-center justify-center gap-2 p-2 size-24 rounded-md bg-gray-50 border-2 border-dotted hover:bg-gray-100"
+                                            >
+                                                <div className="bg-gray-500 p-1 rounded-full">
+                                                    <PlusSignIcon size={16} className="text-white" />
+                                                </div>
+                                            </button>
+                                        )}
+                                    </CldUploadWidget>
                                 </div>
 
                                 <button type="submit" class="w-full text-white bg-indigo-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Add Blog</button>
