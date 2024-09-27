@@ -1,20 +1,56 @@
-import React from 'react'
+"use client"
+import axios from 'axios'
+import Link from 'next/link'
+import React, { useEffect, useState } from 'react'
+
+// async function getPost() {
+//   try {
+//     let res = await fetch(`http://localhost:3000/api/blogs`)
+//     let post = await res.json()
+//     return post
+//   } catch (error) {
+//     console.log(error)
+//   }
+// }
+
+const tableHeaders = ["Product name", "Category", "Created At", "Action"]
+
+const Page = () => {
 
 
-async function getPost() {
-  try {
-    let res = await fetch(`http://localhost:3000/api/blogs`)
-    let post = await res.json()
-    return post
-  } catch (error) {
-    console.log(error)
+
+  const [data, setData] = useState([])
+  // console.log(data)
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get("http://localhost:3000/api/blogs")
+        setData(res?.data?.getBlogs)
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchData()
+  }, [])
+
+  async function delPost(id) {
+    // alert(id)
+    try {
+      const confirm = window.confirm("are you sure to delelte this post")
+      if (!confirm) return
+      const del = await axios.delete(`http://localhost:3000/api/blogs/${id}`)
+      if (del?.data?.status) {
+        alert("blog deleted")
+        window.location.reload()
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
   }
-}
-
-const Page = async () => {
-
-  const postData = await getPost()
-  const data = postData?.getBlogs
 
   return (
 
@@ -22,15 +58,11 @@ const Page = async () => {
       <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
-            <th scope="col" class="px-6 py-3">
-              Product name
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Category
-            </th>
-            <th scope="col" class="px-6 py-3">
-              Created At
-            </th>
+            {tableHeaders.map((v, i) => (
+              <th scope="col" class="px-6 py-3">
+                {v}
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
@@ -44,6 +76,10 @@ const Page = async () => {
               </td>
               <td class="px-6 py-4">
                 {new Date(v.createdAt).toDateString()}
+              </td>
+              <td class="px-6 py-4">
+                <button onClick={() => delPost(v?._id)}>delete</button>
+                <Link href={`/update-blog?id=${v?._id}`}>edit</Link>
               </td>
             </tr>
           ))}
