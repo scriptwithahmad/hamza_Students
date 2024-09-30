@@ -1,23 +1,12 @@
 "use client"
 import axios from 'axios'
 import Link from 'next/link'
+import { usePathname, useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-
-// async function getPost() {
-//   try {
-//     let res = await fetch(`http://localhost:3000/api/blogs`)
-//     let post = await res.json()
-//     return post
-//   } catch (error) {
-//     console.log(error)
-//   }
-// }
 
 const tableHeaders = ["Product name", "Category", "Created At", "Action"]
 
 const Page = () => {
-
-
 
   const [data, setData] = useState([])
   // console.log(data)
@@ -79,7 +68,7 @@ const Page = () => {
               </td>
               <td class="px-6 py-4">
                 <button onClick={() => delPost(v?._id)}>delete</button>
-                <Link href={`/update-blog?id=${v?._id}`}>edit</Link>
+                <Link className='border px-3 py-1 rounded-lg' href={`/update-blog?id=${v?._id}`}>edit</Link>
               </td>
             </tr>
           ))}

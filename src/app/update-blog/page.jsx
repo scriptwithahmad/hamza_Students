@@ -1,22 +1,26 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Editor } from '@tinymce/tinymce-react';
 import axios from 'axios';
 import { CldUploadWidget } from "next-cloudinary";
 import { Delete01Icon, PlusSignIcon } from 'hugeicons-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+
 
 const Page = () => {
 
+    const router = useRouter()
     const [selectedImage, setSelectedImage] = useState(null)
-    console.log(selectedImage)
+    // console.log(selectedImage)
+
+    const search = useSearchParams()
+    const id = search.get("id")
 
     const [formData, setFormData] = useState({
         desc: "",
         title: "",
         category: "",
     })
-
-    // console.log(formData)
 
 
     // onchange handler -------
@@ -28,20 +32,36 @@ const Page = () => {
 
     }
 
+    useEffect(() => {
+        const getSingle = async () => {
+            try {
+                console.log(id)
+                let res = await fetch(`http://localhost:3000/api/blogs/${id}`)
+                let post = await res.json()
+                setFormData(post?.getSingleBlog)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        getSingle()
+    }, [])
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-            const res = await axios.post("/api/blogs", { ...formData, image: selectedImage })
+            alert(id)
+            const res = await axios.put(`/api/blogs/${id}`, { ...formData })
 
-            console.log(res.data)
+            console.log(res)
 
-            if (res.data.success) {
+            if (res.data.status) {
                 alert(res.data.message)
                 setFormData({
                     desc: "",
                     title: "",
                     category: "",
                 })
+                router.push("/dashbaord")
             }
 
         } catch (error) {
@@ -146,7 +166,7 @@ const Page = () => {
                                     </CldUploadWidget>
                                 </div>
 
-                                <button type="submit" class="w-full text-white bg-indigo-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Add Blog</button>
+                                <button type="submit" class="w-full text-white bg-indigo-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Update Blog</button>
                             </form>
                         </div>
                     </div>
